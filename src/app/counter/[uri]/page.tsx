@@ -1,4 +1,3 @@
-import { api } from "@/trpc/server";
 import CounterDisplay from "./_components/counter-display";
 
 export default async function Page({
