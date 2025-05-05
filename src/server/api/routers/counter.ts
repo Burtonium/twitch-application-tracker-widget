@@ -2,6 +2,10 @@ import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import { createCounterSchema } from "@/validators/counter";
+import EventEmitter, { on } from "@/utils/event-emitter";
+import { tracked } from "@trpc/server";
+
+const ee = new EventEmitter();
 
 export const counterRouter = createTRPCRouter({
   create: publicProcedure
@@ -10,18 +14,50 @@ export const counterRouter = createTRPCRouter({
       return ctx.db.counter.create({
         data: {
           name: input.name,
+          uri: input.uri,
         },
       });
     }),
+  delete: publicProcedure
+    .input(z.object({ uri: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.counter.delete({
+        where: { uri: input.uri },
+      });
+    }),
   increment: publicProcedure
-    .input(z.object({ id: z.number() }))
+    .input(z.object({ uri: z.string() }))
     .mutation(async ({ ctx, input }) => {
       return ctx.db.counter.update({
-        where: { id: input.id },
+        where: { uri: input.uri },
         data: { value: { increment: 1 } },
       });
     }),
   list: publicProcedure.query(async ({ ctx }) => {
-    return ctx.db.counter.findMany();
+    return ctx.db.counter.findMany({
+      orderBy: { name: "asc" },
+    });
   }),
+  getByName: publicProcedure
+    .input(z.object({ uri: z.string() }))
+    .subscription(async function* (opts) {
+      const { uri } = opts.input;
+
+      const initialCounter = await opts.ctx.db.counter.findUnique({
+        where: { uri },
+      });
+
+      if (initialCounter) {
+        yield tracked(initialCounter.uri, initialCounter);
+      }
+
+      // Then listen for subsequent increments
+      for await (const [counter] of ee.toIterable("CounterIncrement", {
+        signal: opts.signal,
+      })) {
+        if (counter.uri === uri) {
+          yield tracked(counter.uri, counter);
+        }
+      }
+    }),
 });

@@ -11,7 +11,7 @@ datasource db {
 }
 
 model Counter {
-    id        Int      @id @default(autoincrement())
+    uri       String    @id
     name      String
-    value     Int      @default(0)
+    value     Int       @default(0)
 }

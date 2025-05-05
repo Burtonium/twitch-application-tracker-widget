@@ -6,6 +6,8 @@ import type { AnyFieldApi } from "@tanstack/react-form";
 import { api } from "@/trpc/react";
 import { createCounterSchema } from "@/validators/counter";
 
+const isBrowser = typeof window !== "undefined";
+
 function FieldInfo({ field }: { field: AnyFieldApi }) {
   return (
     <>
@@ -20,17 +22,37 @@ function FieldInfo({ field }: { field: AnyFieldApi }) {
 }
 
 const CreateCounterForm = () => {
-  const createCounter = api.counter.create.useMutation();
+  const utils = api.useUtils();
+  const createCounter = api.counter.create.useMutation({
+    onMutate: (counter) => {
+      utils.counter.list.setData(undefined, (data) => {
+        const newData = data
+          ? [...data, { ...counter, value: 0 }]
+          : [{ ...counter, value: 0 }];
+        return newData.sort((a, b) => a.name.localeCompare(b.name));
+      });
+    },
+    onSuccess: () => {
+      utils.counter.list.refetch();
+    },
+  });
   const form = useForm({
     defaultValues: {
       name: "",
+      uri: "",
     },
     validators: {
       onChange: createCounterSchema,
     },
-    onSubmit: async ({ value }) =>
-      createCounter.mutateAsync({ name: value.name }),
+    onSubmit: async ({ value }) => createCounter.mutateAsync(value),
   });
+
+  // Function to copy text to clipboard
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard
+      .writeText(text)
+      .catch((err) => console.error("Failed to copy: ", err));
+  };
 
   return (
     <form
@@ -41,7 +63,7 @@ const CreateCounterForm = () => {
       }}
       className="mx-auto max-w-md rounded-md border bg-white p-6 shadow-md"
     >
-      <h1 className="mb-4 text-2xl font-bold text-gray-900">Create</h1>
+      <h1 className="mb-4 text-2xl font-bold text-gray-900">Create Counter</h1>
       <div className="mb-4">
         <form.Field
           name="name"
@@ -51,7 +73,47 @@ const CreateCounterForm = () => {
                 htmlFor={field.name}
                 className="mb-2 block text-sm font-medium text-gray-700"
               >
-                Counter Name:
+                Display Name:
+              </label>
+              <input
+                id={field.name}
+                name={field.name}
+                value={field.state.value}
+                onBlur={field.handleBlur}
+                onChange={(e) => {
+                  if (!form.fieldInfo.uri.instance?.getMeta().isTouched) {
+                    form.setFieldValue(
+                      "uri",
+                      e.target.value
+                        .toLocaleLowerCase()
+                        .replaceAll(" ", "-")
+                        .replaceAll(/[^a-z0-9\-_]/g, ""),
+                      {
+                        dontUpdateMeta: true,
+                      },
+                    );
+                  }
+
+                  field.handleChange(e.target.value);
+                }}
+                className="w-full rounded-md border p-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+              />
+              <FieldInfo field={field} />
+            </>
+          )}
+        />
+      </div>
+
+      <div className="mb-4">
+        <form.Field
+          name="uri"
+          children={(field) => (
+            <>
+              <label
+                htmlFor={field.name}
+                className="mb-2 block text-sm font-medium text-gray-700"
+              >
+                Uri:
               </label>
               <input
                 id={field.name}
@@ -61,6 +123,25 @@ const CreateCounterForm = () => {
                 onChange={(e) => field.handleChange(e.target.value)}
                 className="w-full rounded-md border p-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
               />
+              <p className="mt-2 text-sm text-gray-500">
+                Url:{" "}
+                <code>
+                  http://localhost:3000/counter/{field.state.value}
+                  {field.state.value}
+                </code>
+              </p>
+              <button
+                type="button"
+                onClick={() =>
+                  copyToClipboard(
+                    `${isBrowser && window.location.origin}/counter/${field.state.value}`,
+                  )
+                }
+                className="mt-2 rounded-md bg-blue-500 px-3 py-1 text-white hover:bg-blue-600"
+              >
+                Copy to Clipboard
+              </button>
+              <br />
               <FieldInfo field={field} />
             </>
           )}

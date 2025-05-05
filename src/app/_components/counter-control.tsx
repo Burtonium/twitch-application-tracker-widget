@@ -1,39 +1,66 @@
 "use client";
 
-import React from "react";
+import React, { useMemo } from "react";
 import { api } from "@/trpc/react";
+import type { Counter } from "@prisma/client";
+import { debounce } from "lodash";
+import { X } from "lucide-react";
 
 interface CounterProps {
-  counter: {
-    id: number;
-    name: string;
-    value: number;
-  };
-  onSuccess?: () => void;
+  counter: Counter;
 }
 
-const CounterControls: React.FC<CounterProps> = ({ counter, onSuccess }) => {
+const CounterControls: React.FC<CounterProps> = ({ counter }) => {
   const utils = api.useUtils();
 
-  const incrementCounter = api.counter.increment.useMutation({
+  const debouncedRefetch = useMemo(
+    () =>
+      debounce(() => {
+        utils.counter.list.refetch();
+      }, 1500),
+    [utils],
+  );
+
+  const deleteCounter = api.counter.delete.useMutation({
     onMutate: () => {
-      utils.counter.list.setData(undefined, (data) => [
-        ...(data?.filter((c) => c.id !== counter.id) ?? []),
-        { ...counter, value: counter.value + 1 },
-      ]);
+      utils.counter.list.setData(undefined, (data) => {
+        const updatedData = data?.filter((c) => c.uri !== counter.uri) ?? [];
+        return updatedData;
+      });
     },
     onSuccess: () => {
-      utils.counter.list.invalidate();
+      debouncedRefetch();
     },
   });
 
-  const increment = () => incrementCounter.mutate({ id: counter.id });
+  const incrementCounter = api.counter.increment.useMutation({
+    onMutate: () => {
+      utils.counter.list.setData(undefined, (data) => {
+        const updatedData =
+          data?.map((c) =>
+            c.uri === counter.uri
+              ? { ...counter, value: counter.value + 1 }
+              : c,
+          ) ?? [];
+        return updatedData;
+      });
+    },
+    onSuccess: () => debouncedRefetch(),
+  });
+
+  const increment = () => incrementCounter.mutate({ uri: counter.uri });
 
   return (
     <div
-      key={counter.id}
-      className="flex flex-col items-center gap-3 rounded border bg-white p-4 shadow-md"
+      key={counter.uri}
+      className="relative flex flex-col items-center gap-3 rounded border bg-white p-4 shadow-md"
     >
+      <button
+        onClick={() => deleteCounter.mutateAsync({ uri: counter.uri })}
+        className="absolute top-2 right-2 cursor-pointer hover:text-red-500 focus:ring-2 focus:ring-red-500 focus:outline-none"
+      >
+        <X />
+      </button>
       <div className="mb-2 text-lg font-bold">{counter.name}</div>
       <input
         readOnly
