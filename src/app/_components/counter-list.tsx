@@ -1,7 +1,7 @@
 "use client";
 
 import type { Counter } from "@prisma/client";
-import CounterControls from "./counter-control";
+import CounterControls from "./counter-controls";
 import { api } from "@/trpc/react";
 
 interface ClientPageProps {
@@ -15,11 +15,13 @@ const CounterList = ({ counters }: ClientPageProps) => {
 
   return (
     <div>
-      <h1 className="heading text-3xl font-bold">Counters</h1>
+      <h1 className="heading mb-3 text-3xl font-bold">Counters</h1>
       {data.length === 0 && <p>No counters found</p>}
-      {data.map((counter) => (
-        <CounterControls key={counter.id} counter={counter} />
-      ))}
+      <div className="grid w-full grid-cols-4 gap-4">
+        {data.map((counter) => (
+          <CounterControls key={counter.uri} counter={counter} />
+        ))}
+      </div>
     </div>
   );
 };

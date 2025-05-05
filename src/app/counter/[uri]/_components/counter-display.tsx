@@ -13,12 +13,9 @@ const CounterDisplay: React.FC<CounterDisplayProps> = ({ uri }) => {
   });
 
   return (
-    <div>
-      <h1>
-        {" "}
-        {counter.data?.data?.name}: {counter.data?.data?.value}
-      </h1>
-    </div>
+    <h1 className="inline text-6xl font-bold shadow">
+      {counter.data?.data?.name}: {counter.data?.data?.value}
+    </h1>
   );
 };
 

@@ -44,7 +44,10 @@ const CreateCounterForm = () => {
     validators: {
       onChange: createCounterSchema,
     },
-    onSubmit: async ({ value }) => createCounter.mutateAsync(value),
+    onSubmit: async ({ value, formApi }) => {
+      await createCounter.mutateAsync(value);
+      formApi.reset();
+    },
   });
 
   // Function to copy text to clipboard
@@ -55,115 +58,114 @@ const CreateCounterForm = () => {
   };
 
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        form.handleSubmit();
-      }}
-      className="mx-auto max-w-md rounded-md border bg-white p-6 shadow-md"
-    >
-      <h1 className="mb-4 text-2xl font-bold text-gray-900">Create Counter</h1>
-      <div className="mb-4">
-        <form.Field
-          name="name"
-          children={(field) => (
-            <>
-              <label
-                htmlFor={field.name}
-                className="mb-2 block text-sm font-medium text-gray-700"
-              >
-                Display Name:
-              </label>
-              <input
-                id={field.name}
-                name={field.name}
-                value={field.state.value}
-                onBlur={field.handleBlur}
-                onChange={(e) => {
-                  if (!form.fieldInfo.uri.instance?.getMeta().isTouched) {
-                    form.setFieldValue(
-                      "uri",
-                      e.target.value
-                        .toLocaleLowerCase()
-                        .replaceAll(" ", "-")
-                        .replaceAll(/[^a-z0-9\-_]/g, ""),
-                      {
-                        dontUpdateMeta: true,
-                      },
-                    );
+    <div>
+      <h1 className="heading mb-3 text-3xl font-bold">Create Counter</h1>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          form.handleSubmit();
+        }}
+        className="max-w-2xl rounded-md border bg-white p-6 shadow-md"
+      >
+        <div className="mb-4">
+          <form.Field
+            name="name"
+            children={(field) => (
+              <>
+                <label
+                  htmlFor={field.name}
+                  className="mb-2 block text-sm font-medium text-gray-700"
+                >
+                  Display Name:
+                </label>
+                <input
+                  id={field.name}
+                  name={field.name}
+                  value={field.state.value}
+                  onBlur={field.handleBlur}
+                  onChange={(e) => {
+                    if (!form.fieldInfo.uri.instance?.getMeta().isTouched) {
+                      form.setFieldValue(
+                        "uri",
+                        e.target.value
+                          .toLocaleLowerCase()
+                          .replaceAll(" ", "-")
+                          .replaceAll(/[^a-z0-9\-_]/g, ""),
+                        {
+                          dontUpdateMeta: true,
+                        },
+                      );
+                    }
+
+                    field.handleChange(e.target.value);
+                  }}
+                  className="w-full rounded-md border p-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                />
+                <FieldInfo field={field} />
+              </>
+            )}
+          />
+        </div>
+
+        <div className="mb-4">
+          <form.Field
+            name="uri"
+            children={(field) => (
+              <>
+                <label
+                  htmlFor={field.name}
+                  className="mb-2 block text-sm font-medium text-gray-700"
+                >
+                  Uri:
+                </label>
+                <input
+                  id={field.name}
+                  name={field.name}
+                  value={field.state.value}
+                  onBlur={field.handleBlur}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                  className="w-full rounded-md border p-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                />
+                <p className="mt-2 text-sm text-gray-500">
+                  Url:{" "}
+                  <code>http://localhost:3000/counter/{field.state.value}</code>
+                </p>
+                <button
+                  type="button"
+                  onClick={() =>
+                    copyToClipboard(
+                      `${isBrowser && window.location.origin}/counter/${field.state.value}`,
+                    )
                   }
-
-                  field.handleChange(e.target.value);
-                }}
-                className="w-full rounded-md border p-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
-              />
-              <FieldInfo field={field} />
-            </>
+                  className="mt-2 cursor-pointer rounded-md bg-blue-500 px-3 py-1 text-white hover:bg-blue-600"
+                >
+                  Copy to Clipboard
+                </button>
+                <br />
+                <FieldInfo field={field} />
+              </>
+            )}
+          />
+        </div>
+        <form.Subscribe
+          selector={(state) => [state.canSubmit, state.isSubmitting]}
+          children={([canSubmit, isSubmitting]) => (
+            <button
+              type="submit"
+              disabled={!canSubmit}
+              className={`w-full rounded-md bg-indigo-600 px-4 py-2 font-semibold text-white transition-colors ${
+                !canSubmit
+                  ? "cursor-not-allowed opacity-50"
+                  : "hover:bg-indigo-700"
+              }`}
+            >
+              {isSubmitting ? "..." : "Add"}
+            </button>
           )}
         />
-      </div>
-
-      <div className="mb-4">
-        <form.Field
-          name="uri"
-          children={(field) => (
-            <>
-              <label
-                htmlFor={field.name}
-                className="mb-2 block text-sm font-medium text-gray-700"
-              >
-                Uri:
-              </label>
-              <input
-                id={field.name}
-                name={field.name}
-                value={field.state.value}
-                onBlur={field.handleBlur}
-                onChange={(e) => field.handleChange(e.target.value)}
-                className="w-full rounded-md border p-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
-              />
-              <p className="mt-2 text-sm text-gray-500">
-                Url:{" "}
-                <code>
-                  http://localhost:3000/counter/{field.state.value}
-                  {field.state.value}
-                </code>
-              </p>
-              <button
-                type="button"
-                onClick={() =>
-                  copyToClipboard(
-                    `${isBrowser && window.location.origin}/counter/${field.state.value}`,
-                  )
-                }
-                className="mt-2 rounded-md bg-blue-500 px-3 py-1 text-white hover:bg-blue-600"
-              >
-                Copy to Clipboard
-              </button>
-              <br />
-              <FieldInfo field={field} />
-            </>
-          )}
-        />
-      </div>
-      <form.Subscribe
-        selector={(state) => [state.canSubmit, state.isSubmitting]}
-        children={([canSubmit, isSubmitting]) => (
-          <button
-            type="submit"
-            disabled={!canSubmit}
-            className={`w-full rounded-md bg-indigo-600 px-4 py-2 font-semibold text-white transition-colors ${
-              !canSubmit
-                ? "cursor-not-allowed opacity-50"
-                : "hover:bg-indigo-700"
-            }`}
-          >
-            {isSubmitting ? "..." : "Add"}
-          </button>
-        )}
-      />
-    </form>
+      </form>
+    </div>
   );
 };
 

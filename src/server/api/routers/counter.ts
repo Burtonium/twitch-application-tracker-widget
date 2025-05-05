@@ -18,6 +18,16 @@ export const counterRouter = createTRPCRouter({
         },
       });
     }),
+  reset: publicProcedure
+    .input(z.object({ uri: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const updated = await ctx.db.counter.update({
+        where: { uri: input.uri },
+        data: { value: 0 },
+      });
+
+      ee.emit("CounterUpdated", updated.uri, updated);
+    }),
   delete: publicProcedure
     .input(z.object({ uri: z.string() }))
     .mutation(async ({ ctx, input }) => {
@@ -28,10 +38,14 @@ export const counterRouter = createTRPCRouter({
   increment: publicProcedure
     .input(z.object({ uri: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      return ctx.db.counter.update({
+      const updated = await ctx.db.counter.update({
         where: { uri: input.uri },
         data: { value: { increment: 1 } },
       });
+
+      ee.emit("CounterUpdated", input.uri, updated);
+
+      return updated;
     }),
   list: publicProcedure.query(async ({ ctx }) => {
     return ctx.db.counter.findMany({
@@ -51,12 +65,14 @@ export const counterRouter = createTRPCRouter({
         yield tracked(initialCounter.uri, initialCounter);
       }
 
-      // Then listen for subsequent increments
-      for await (const [counter] of ee.toIterable("CounterIncrement", {
-        signal: opts.signal,
-      })) {
-        if (counter.uri === uri) {
-          yield tracked(counter.uri, counter);
+      for await (const [counterUri, counter] of ee.toIterable(
+        "CounterUpdated",
+        {
+          signal: opts.signal,
+        },
+      )) {
+        if (counterUri === uri) {
+          yield tracked(counterUri, counter);
         }
       }
     }),

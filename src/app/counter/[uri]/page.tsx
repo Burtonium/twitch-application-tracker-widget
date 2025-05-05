@@ -4,9 +4,9 @@ import CounterDisplay from "./_components/counter-display";
 export default async function Page({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ uri: string }>;
 }) {
-  const { slug } = await params;
+  const { uri } = await params;
 
-  return <CounterDisplay uri={slug} />;
+  return <CounterDisplay uri={uri} />;
 }
