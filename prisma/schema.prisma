@@ -15,3 +15,24 @@ model Counter {
     name      String
     value     Int       @default(0)
 }
+
+model Timer {
+    id        String    @id
+    name      String
+    value     Int       @default(0)
+}
+
+enum JobApplicationStatus {
+    Pending
+    InterviewPending
+    Success
+    Rejected
+}
+
+model JobApplication {
+    id          String    @id
+    status      JobApplicationStatus
+    name        String
+    description String
+    url         String
+}

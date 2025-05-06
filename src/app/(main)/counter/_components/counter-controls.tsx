@@ -4,7 +4,7 @@ import React, { useMemo } from "react";
 import { api } from "@/trpc/react";
 import type { Counter } from "@prisma/client";
 import { debounce } from "lodash";
-import { ArrowRight, Copy, Eye, X } from "lucide-react";
+import { Copy, Eye, X } from "lucide-react";
 import Link from "next/link";
 
 interface CounterProps {
@@ -62,7 +62,23 @@ const CounterControls: React.FC<CounterProps> = ({ counter }) => {
     onSuccess: () => debouncedRefetch(),
   });
 
+  const decrementCounter = api.counter.decrement.useMutation({
+    onMutate: () => {
+      utils.counter.list.setData(undefined, (data) => {
+        const updatedData =
+          data?.map((c) =>
+            c.uri === counter.uri
+              ? { ...counter, value: counter.value - 1 }
+              : c,
+          ) ?? [];
+        return updatedData;
+      });
+    },
+    onSuccess: () => debouncedRefetch(),
+  });
+
   const increment = () => incrementCounter.mutate({ uri: counter.uri });
+  const decrement = () => decrementCounter.mutate({ uri: counter.uri });
 
   return (
     <div
@@ -89,6 +105,12 @@ const CounterControls: React.FC<CounterProps> = ({ counter }) => {
           className="cursor-pointer rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none"
         >
           Increment
+        </button>
+        <button
+          onClick={() => decrement()}
+          className="cursor-pointer rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none"
+        >
+          Decrement
         </button>
         <button
           onClick={() => resetCounter.mutateAsync({ uri: counter.uri })}

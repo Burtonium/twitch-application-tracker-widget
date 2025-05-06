@@ -50,7 +50,6 @@ const CreateCounterForm = () => {
     },
   });
 
-  // Function to copy text to clipboard
   const copyToClipboard = (text: string) => {
     navigator.clipboard
       .writeText(text)

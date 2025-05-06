@@ -1,6 +1,37 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif,
+  --color-text: hsl(0 0% 100%);
+  --color-background: hsl(0 0% 0%);
+  --color-foreground: hsl(0 0% 100%);
+  --color-light: hsl(0 0% 6.7%);
+  --color-light-foreground: hsl(0 0% 100%);
+  --color-lighter: hsl(0 0% 16.5%);
+  --color-lighter-foreground: hsl(0 0% 100%);
+  --color-lightest: hsl(0 0% 60%);
+  --color-lightest-foreground: hsl(0 0% 100%);
+  --color-input: hsl(0% 0% 80%);
+  --color-input-border: var(--color-lighter);
+  --color-card: var(--color-light);
+  --color-card-foreground: hsl(0 0% 100%);
+  --color-popover: var(--color-light);
+  --color-popover-foreground: hsl(0 0% 100%);
+  --color-primary: hsl(345, 100%, 57%);
+  --color-primary-foreground: var(--color-foreground);
+  --color-muted: #7f7f7f;
+  --color-muted-foreground: var(--color-background-lightest);
+  --color-secondary: hsl(165, 100%, 40%);
+  --color-secondary-foreground: hsl(0 0% 100%);
+  --color-tertiary: hsl(45, 100%, 50%);
+  --color-destructive: hsl(0 97% 33%);
+  --color-destructive-foreground: var(--color-foreground);
+  --color-warning: hsl(30 100% 60%);
+  --color-warning-foreground: var(--color-foreground);
+  --color-border: var(--color-background-lightest);
+  --color-ring: hsl(240 10% 20%);
+  --radius: 0.5rem;
+  --font-title: var(--font-secondary);
+  --font-sans:
+    var(--font-primary), ui-sans-serif, system-ui, sans-serif,
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }

@@ -47,6 +47,18 @@ export const counterRouter = createTRPCRouter({
 
       return updated;
     }),
+  decrement: publicProcedure
+    .input(z.object({ uri: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const updated = await ctx.db.counter.update({
+        where: { uri: input.uri },
+        data: { value: { decrement: 1 } },
+      });
+
+      ee.emit("CounterUpdated", input.uri, updated);
+
+      return updated;
+    }),
   list: publicProcedure.query(async ({ ctx }) => {
     return ctx.db.counter.findMany({
       orderBy: { name: "asc" },

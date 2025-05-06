@@ -13,7 +13,7 @@ const CounterDisplay: React.FC<CounterDisplayProps> = ({ uri }) => {
   });
 
   return (
-    <h1 className="inline text-6xl font-bold shadow">
+    <h1 className="inline text-6xl font-bold text-shadow-lg">
       {counter.data?.data?.name}: {counter.data?.data?.value}
     </h1>
   );
