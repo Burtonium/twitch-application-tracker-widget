@@ -35,12 +35,12 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     return (
       <div
         className={cn(
-          "border-input-border placeholder:text-muted file:text-foreground focus-visible:ring-ring has-[:focus-visible]:border-primary flex items-center rounded-md border bg-transparent shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-1 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
+          "border-tertiary/75 placeholder:text-muted file:text-foreground focus-visible:ring-ring has-[:focus-visible]:border-primary flex items-center rounded-md border bg-transparent shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-1 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
           { "animate-pulse": loading },
           {
-            "h-8": size === "sm",
-            "h-12": size === "md",
-            "h-16": size === "lg",
+            "h-7": size === "sm",
+            "h-9": size === "md",
+            "h-12": size === "lg",
           },
           error && "border-destructive",
           className,
@@ -67,8 +67,8 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             alignmentClass,
             loading && "opacity-50",
             {
-              "h-6 text-xs": size === "sm",
-              "h-8": size === "md",
+              "h-7 text-xs": size === "sm",
+              "h-9": size === "md",
               "h-12 text-lg": size === "lg",
             },
             error && "text-destructive",

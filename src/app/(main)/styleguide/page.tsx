@@ -54,7 +54,7 @@ export default function Styleguide() {
   const total = progress + progress2 + progress3;
 
   return (
-    <div className="space-y-8 p-3 sm:p-5">
+    <div className="space-y-8 p-3 sm:p-5 md:p-8">
       <div>
         <h2 className="font-title mb-3 text-2xl font-bold tracking-wide">
           <Paintbrush className="mb-1 inline size-9" /> Page Title

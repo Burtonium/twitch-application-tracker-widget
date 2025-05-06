@@ -24,14 +24,14 @@ const SelectTrigger = React.forwardRef<
   <SelectPrimitive.Trigger
     ref={ref}
     className={cn(
-      "border-lighter ring-offset-background placeholder:text-muted-foreground focus:ring-ring flex h-12 w-full items-center justify-between rounded-md border bg-transparent px-3 py-2 whitespace-nowrap shadow-sm focus:ring-1 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
+      "border-tertiary/75 ring-offset-background placeholder:text-muted-foreground focus:ring-primary flex h-12 w-full cursor-pointer items-center justify-between rounded-md border bg-transparent px-3 py-2 whitespace-nowrap shadow-sm focus:ring-1 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
       className,
     )}
     {...props}
   >
     {children}
     <SelectPrimitive.Icon asChild>
-      <CaretDownIcon className="size-4 opacity-50" />
+      <CaretDownIcon className="text-tertiary size-4" />
     </SelectPrimitive.Icon>
   </SelectPrimitive.Trigger>
 ));

@@ -1,11 +1,15 @@
-import { HydrateClient } from "@/trpc/server";
-import Navbar from "./_components/navbar";
+import { api, HydrateClient } from "@/trpc/server";
+import JobApplicationList from "./_components/job-application-list";
+import { CreateJobApplication } from "./_components/job-application-form";
 
 export default async function Home() {
+  const jobApplications = await api.jobApplications.list();
   return (
     <HydrateClient>
-      <Navbar />
-      <main className="space-y-5 px-5 py-16"></main>
+      <main className="p-3 sm:p-5 md:p-8">
+        <CreateJobApplication />
+        <JobApplicationList initialData={jobApplications} />
+      </main>
     </HydrateClient>
   );
 }

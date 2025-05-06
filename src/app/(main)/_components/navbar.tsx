@@ -56,19 +56,19 @@ const Navbar: React.FC = () => {
         className={cn(
           "bg-background/25 lg:absoluted fixed top-0 right-0 size-full backdrop-blur-lg transition-all duration-500",
           {
-            "h-20": !isNavOpen,
-            "h-full": isNavOpen,
+            "h-20 md:h-24": !isNavOpen,
+            "h-full lg:h-24": isNavOpen,
           },
         )}
       />
 
       <div
         className={cn(
-          "top-0 z-10 flex w-full items-center justify-between gap-3 p-5 lg:p-8 lg:py-6",
+          "top-0 z-10 flex w-full items-center justify-between gap-3 p-3 sm:p-5 md:p-8",
         )}
       >
         <Link
-          className="font-title text-2xl font-bold text-white hover:text-gray-300"
+          className="font-title text-2xl font-bold text-white underline-offset-4 hover:text-gray-300"
           href="/"
         >
           <span className="decoration-primary underline">Job </span>

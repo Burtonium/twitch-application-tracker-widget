@@ -11,7 +11,6 @@
   --color-lightest: hsl(0 0% 60%);
   --color-lightest-foreground: hsl(0 0% 100%);
   --color-input: hsl(0% 0% 80%);
-  --color-input-border: var(--color-lighter);
   --color-card: var(--color-light);
   --color-card-foreground: hsl(0 0% 100%);
   --color-popover: var(--color-light);
