@@ -56,7 +56,7 @@ export default function Styleguide() {
   return (
     <div className="space-y-8 p-3 sm:p-5 md:p-8">
       <div>
-        <h2 className="font-title mb-3 text-2xl font-bold tracking-wide">
+        <h2 className="font-title decoration-tertiary mb-3 text-2xl font-bold tracking-wide underline underline-offset-4">
           <Paintbrush className="mb-1 inline size-9" /> Page Title
         </h2>
         <p className="mb-4 text-xl leading-tight font-medium">

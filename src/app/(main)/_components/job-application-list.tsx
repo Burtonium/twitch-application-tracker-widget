@@ -43,7 +43,13 @@ const JobApplicationList: React.FC<JobApplicationListProps> = ({
             )}
           >
             <h3>
-              {application.title} at {application.company}
+              <span className="text-secondary text-xl font-bold">
+                {application.title}
+              </span>{" "}
+              at{" "}
+              <span className="text-tertiary text-xl font-bold">
+                {application.company}
+              </span>
             </h3>
             <p>Last Modified: {dayjs(application.updatedAt).fromNow()}</p>
             <p className="flex items-center gap-3">
