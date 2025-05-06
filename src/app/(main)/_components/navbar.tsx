@@ -37,7 +37,6 @@ const NextLink: FC<PropsWithChildren<{ path: string; className?: string }>> = ({
 
 const routes = [
   { name: "Dashboard", path: "/" },
-  { name: "Counters", path: "/counter" },
   { name: "Styleguide", path: "/styleguide" },
 ];
 
@@ -55,7 +54,7 @@ const Navbar: React.FC = () => {
     <nav className={cn("fixed z-50 flex w-full items-center")} ref={navRef}>
       <div
         className={cn(
-          "bg-background/25 fixed top-0 right-0 size-full backdrop-blur-lg transition-all lg:absolute",
+          "bg-background/25 lg:absoluted fixed top-0 right-0 size-full backdrop-blur-lg transition-all duration-500",
           {
             "h-20": !isNavOpen,
             "h-full": isNavOpen,
@@ -65,14 +64,16 @@ const Navbar: React.FC = () => {
 
       <div
         className={cn(
-          "top-0 z-10 flex w-full items-center justify-between gap-3 px-5 py-6 lg:p-8 lg:py-6",
+          "top-0 z-10 flex w-full items-center justify-between gap-3 p-5 lg:p-8 lg:py-6",
         )}
       >
         <Link
           className="font-title text-2xl font-bold text-white hover:text-gray-300"
           href="/"
         >
-          Job Application Tracker
+          <span className="decoration-primary underline">Job </span>
+          <span className="decoration-secondary underline">Application </span>
+          <span className="decoration-tertiary underline">Tracker</span>
         </Link>
         <Burger
           className={cn("shrink-0 rounded-xl lg:hidden", {
@@ -84,7 +85,7 @@ const Navbar: React.FC = () => {
       </div>
       <div
         className={cn(
-          "fixed right-0 px-6 pt-50 transition-transform lg:relative lg:py-0",
+          "fixed right-0 px-6 pt-50 transition-transform duration-300 lg:relative lg:py-0",
           {
             "translate-x-0": isNavOpen,
             "translate-x-full lg:translate-x-0": !isNavOpen,

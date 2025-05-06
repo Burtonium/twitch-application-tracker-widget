@@ -1,4 +1,4 @@
-import { counterRouter as counter } from "@/server/api/routers/counter";
+import { jobApplicationsRouter } from "@/server/api/routers/applications";
 import { createCallerFactory, createTRPCRouter } from "@/server/api/trpc";
 
 /**
@@ -7,7 +7,7 @@ import { createCallerFactory, createTRPCRouter } from "@/server/api/trpc";
  * All routers added in /api/routers should be manually added here.
  */
 export const appRouter = createTRPCRouter({
-  counter,
+  jobApplications: jobApplicationsRouter,
 });
 
 // export type definition of API

@@ -35,7 +35,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     return (
       <div
         className={cn(
-          "border-input-border file:text-foreground placeholder:text-muted-foreground focus-visible:ring-ring has-[:focus-visible]:border-primary flex items-center rounded-md border bg-transparent shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-1 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
+          "border-input-border placeholder:text-muted file:text-foreground focus-visible:ring-ring has-[:focus-visible]:border-primary flex items-center rounded-md border bg-transparent shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-1 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
           { "animate-pulse": loading },
           {
             "h-8": size === "sm",
@@ -63,7 +63,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         <input
           type={type}
           className={cn(
-            "[&::-webkit-outer-spin-button] text-input file:text-foreground placeholder:text-muted-foreground w-full flex-1 [appearance:textfield] bg-transparent px-3 py-1 file:border-0 file:bg-transparent file:text-sm file:font-medium focus:border-none focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 [&::-webkit-inner-spin-button]:appearance-none",
+            "[&::-webkit-outer-spin-button] text-input file:text-foreground placeholder:text-muted w-full flex-1 [appearance:textfield] bg-transparent px-3 py-1 file:border-0 file:bg-transparent file:text-sm file:font-medium focus:border-none focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 [&::-webkit-inner-spin-button]:appearance-none",
             alignmentClass,
             loading && "opacity-50",
             {

@@ -59,7 +59,7 @@ export default function Styleguide() {
         <h2 className="font-title mb-3 text-2xl font-bold tracking-wide">
           <Paintbrush className="mb-1 inline size-9" /> Page Title
         </h2>
-        <p className="mb-4 text-xl leading-tight font-medium text-white/80">
+        <p className="mb-4 text-xl leading-tight font-medium">
           Page description is here with a bunch of bla bla blas so you can see
           how the page description looks like without your typical ipsum lorem.
           If you really loved the ipsum lorem we formally apologize for the

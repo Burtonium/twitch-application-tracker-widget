@@ -10,29 +10,19 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model Counter {
-    uri       String    @id
-    name      String
-    value     Int       @default(0)
-}
-
-model Timer {
-    id        String    @id
-    name      String
-    value     Int       @default(0)
-}
-
 enum JobApplicationStatus {
     Pending
-    InterviewPending
+    Interviewing
     Success
     Rejected
 }
 
 model JobApplication {
-    id          String    @id
-    status      JobApplicationStatus
-    name        String
-    description String
+    id          String               @id @default(uuid())
+    status      JobApplicationStatus @default(Pending)
+    title       String
+    company     String
     url         String
+    createdAt   DateTime             @default(now())
+    updatedAt   DateTime             @updatedAt
 }
