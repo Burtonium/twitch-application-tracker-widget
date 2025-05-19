@@ -1,8 +1,7 @@
-import type { Counter } from "@prisma/client";
 import EventEmitter, { on } from "node:events";
 
 export interface AppEvents {
-  CounterUpdated: [uri: Counter["uri"], counter: Counter];
+  StatsUpdated: [stats: { count: number; status: string }[]];
 }
 
 type EventMap<T> = Record<keyof T, any[]>;

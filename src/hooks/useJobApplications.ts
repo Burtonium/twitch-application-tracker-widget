@@ -3,10 +3,16 @@ import { api } from "@/trpc/react";
 import { useMemo } from "react";
 import { debounce, sortBy, uniqueId } from "lodash";
 
-const statusOrder = ["Success", "Interviewing", "Pending", "Rejected"];
+const orderedStatuses = [
+  "Success",
+  "Interviewing",
+  "Pending",
+  "Rejected",
+] as const satisfies readonly JobApplication["status"][];
 
 const useJobApplications = (initialData?: JobApplication[]) => {
   const utils = api.useUtils();
+
   const list = api.jobApplications.list.useQuery(undefined, {
     initialData,
   });
@@ -43,11 +49,33 @@ const useJobApplications = (initialData?: JobApplication[]) => {
     onSuccess: () => invalidateList(),
   });
 
+  const updateStatus = api.jobApplications.updateStatus.useMutation({
+    onMutate: (vars) => {
+      utils.jobApplications.list.setData(undefined, (data) => {
+        return data?.map((app) => {
+          if (app.id === vars.id) {
+            return {
+              ...app,
+              status: vars.status,
+              updatedAt: new Date(),
+            };
+          }
+          return app;
+        });
+      });
+    },
+    onSuccess: () => invalidateList(),
+  });
+
+  const count = api.jobApplications.count.useQuery();
+
+  const stats = api.jobApplications.getStats.useSubscription();
+
   const sortedApplications = useMemo(
     () =>
       sortBy(list.data, [
-        (app) => statusOrder.indexOf(app.status),
-        (app) => -new Date(app.updatedAt).getTime(),
+        (app) => orderedStatuses.indexOf(app.status),
+        (app) => -new Date(app.createdAt).getTime(),
       ]),
     [list.data],
   );
@@ -57,6 +85,9 @@ const useJobApplications = (initialData?: JobApplication[]) => {
     sorted: sortedApplications,
     remove,
     create,
+    count,
+    updateStatus,
+    stats,
   };
 };
 
