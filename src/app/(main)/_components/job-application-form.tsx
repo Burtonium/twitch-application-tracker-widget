@@ -20,7 +20,7 @@ import { z } from "zod";
 import { createJobApplicationSchema } from "@/validators/jobApplication";
 import { api } from "@/trpc/react";
 import useJobApplications from "@/hooks/useJobApplications";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, X } from "lucide-react";
 import { Calendar } from "@/lib/ui/calendar";
 import dayjs from "@/dayjs";
 
@@ -35,7 +35,7 @@ export const CreateJobApplication = () => {
       company: "",
       title: "",
       url: "",
-      createdAt: new Date(), // Default to current date/time if desired
+      createdAt: undefined, // Default to current date/time if desired
     },
     resolver: zodResolver(createJobApplicationSchema),
   });
@@ -121,11 +121,11 @@ export const CreateJobApplication = () => {
               <FormLabel>Created At</FormLabel>
               <FormControl>
                 <Popover>
-                  <PopoverTrigger asChild>
+                  <PopoverTrigger className="relative" asChild>
                     <Button
                       variant={"outline"}
                       className={cn(
-                        "w-[280px] justify-start text-left font-normal",
+                        "relative w-[280px] justify-start text-left font-normal",
                         !field.value && "text-muted-foreground",
                       )}
                     >
@@ -137,7 +137,7 @@ export const CreateJobApplication = () => {
                       )}
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0">
+                  <PopoverContent className="relative w-auto p-0">
                     <Calendar
                       mode="single"
                       selected={field.value}
