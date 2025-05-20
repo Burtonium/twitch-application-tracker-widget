@@ -102,13 +102,12 @@ export const jobApplicationsRouter = createTRPCRouter({
     ctx: { db },
     signal,
   }) {
-    const stats = await fetchStats(db);
-    yield stats;
+    yield await fetchStats(db);
 
-    for await (const [newStats] of on(eventEmitter, "StatsUpdated", {
+    for await (const [newStats] of eventEmitter.toIterable("StatsUpdated", {
       signal,
     })) {
-      yield newStats as z.infer<typeof applicationStats>;
+      yield newStats;
     }
   }),
   count: publicProcedure.query(async ({ ctx }) =>

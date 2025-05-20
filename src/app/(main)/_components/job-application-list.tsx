@@ -51,7 +51,7 @@ const JobApplicationList: React.FC<JobApplicationListProps> = ({
   return (
     <div>
       <h2 className="decoration-tertiary mb-5 text-2xl underline underline-offset-4">
-        <span>Job Applications</span>
+        <span>Job Applications ({applications.length})</span>
       </h2>
       <ul className="grid grid-cols-1 items-center gap-2 sm:grid-cols-2 lg:grid-cols-3">
         {derived?.map((application) => (
