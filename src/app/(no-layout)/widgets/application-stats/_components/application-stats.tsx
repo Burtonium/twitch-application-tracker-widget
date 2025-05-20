@@ -44,7 +44,7 @@ export default function ApplicationStats() {
     <div className="flex w-full flex-col items-end gap-2 p-8">
       {sorted?.map((stat) => (
         <h2
-          className="text-5xl font-bold text-shadow-lg"
+          className="text-5xl font-bold drop-shadow-[0_2px_2px_rgba(0,0,0,1)]"
           style={{ color: colors[stat.status as keyof typeof colors] }}
           key={stat.status}
         >
