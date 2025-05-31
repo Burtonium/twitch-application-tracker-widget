@@ -129,7 +129,7 @@ const JobApplicationList: React.FC<JobApplicationListProps> = ({
             </p>
             <button
               onClick={() => remove.mutateAsync({ id: application.id })}
-              className="text-primary absolute right-3 cursor-pointer"
+              className="text-destructive absolute top-3 right-2 cursor-pointer"
             >
               <X />
             </button>
