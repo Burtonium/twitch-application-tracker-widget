@@ -67,13 +67,34 @@ export const jobApplicationsRouter = createTRPCRouter({
       const stats = await fetchStats(ctx.db);
       eventEmitter.emit("StatsUpdated", stats);
     }),
-  list: publicProcedure.query(async ({ ctx }) => {
-    const jobApplications = await ctx.db.jobApplication.findMany({
-      orderBy: { createdAt: "asc" },
-    });
+  list: publicProcedure
+    .input(z.object({ search: z.string().optional() }).optional())
+    .query(async ({ ctx, input }) => {
+      const jobApplications = await ctx.db.jobApplication.findMany({
+        where: input?.search
+          ? {
+              OR: [
+                { title: { contains: input.search, mode: "insensitive" } },
+                {
+                  company: {
+                    contains: input.search,
+                    mode: "insensitive",
+                  },
+                },
+                {
+                  url: {
+                    contains: input.search,
+                    mode: "insensitive",
+                  },
+                },
+              ],
+            }
+          : undefined,
+        orderBy: { createdAt: "asc" },
+      });
 
-    return jobApplications;
-  }),
+      return jobApplications;
+    }),
   updateStatus: publicProcedure
     .input(
       z.object({ id: z.string(), status: z.nativeEnum(JobApplicationStatus) }),

@@ -1,6 +1,6 @@
 import { type JobApplication } from "@prisma/client";
 import { api } from "@/trpc/react";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { debounce, sortBy, uniqueId } from "lodash";
 
 const orderedStatuses = [
@@ -9,22 +9,51 @@ const orderedStatuses = [
   "Pending",
   "Rejected",
 ] as const satisfies readonly JobApplication["status"][];
+import { useState } from "react";
 
-const useJobApplications = (initialData?: JobApplication[]) => {
+const useJobApplications = ({
+  initialData,
+  search,
+}: { initialData?: JobApplication[]; search?: string } = {}) => {
   const utils = api.useUtils();
+  const [invalidating, setInvalidating] = useState(false);
 
-  const list = api.jobApplications.list.useQuery(undefined, {
-    initialData,
-  });
-
-  const invalidateList = useMemo(
-    () => debounce(utils.jobApplications.list.invalidate, 1500),
-    [utils],
+  const list = api.jobApplications.list.useQuery(
+    { search },
+    {
+      initialData,
+    },
   );
+
+  const invalidateList = useMemo(() => {
+    const debounced = debounce(() => {
+      return utils.jobApplications.list
+        .invalidate()
+        .finally(() => setInvalidating(false));
+    }, 1000);
+
+    return () => {
+      setInvalidating(true);
+      debounced();
+    };
+  }, [utils]);
+
+  useEffect(() => {
+    utils.jobApplications.list.setData({ search }, (data) => {
+      return data?.filter(
+        (app) =>
+          !search ||
+          app.company.toLowerCase().includes(search.toLowerCase()) ||
+          app.title.toLowerCase().includes(search.toLowerCase()) ||
+          app.url.toLowerCase().includes(search.toLowerCase()),
+      );
+    });
+    invalidateList();
+  }, [search]);
 
   const remove = api.jobApplications.delete.useMutation({
     onMutate: (vars) => {
-      utils.jobApplications.list.setData(undefined, (data) => {
+      utils.jobApplications.list.setData({ search }, (data) => {
         return data?.filter((app) => app.id !== vars.id);
       });
     },
@@ -33,7 +62,7 @@ const useJobApplications = (initialData?: JobApplication[]) => {
 
   const create = api.jobApplications.create.useMutation({
     onMutate: (vars) => {
-      utils.jobApplications.list.setData(undefined, (data) => {
+      utils.jobApplications.list.setData({ search }, (data) => {
         return [
           ...(data ?? []),
           {
@@ -51,7 +80,7 @@ const useJobApplications = (initialData?: JobApplication[]) => {
 
   const updateStatus = api.jobApplications.updateStatus.useMutation({
     onMutate: (vars) => {
-      utils.jobApplications.list.setData(undefined, (data) => {
+      utils.jobApplications.list.setData({ search }, (data) => {
         return data?.map((app) => {
           if (app.id === vars.id) {
             return {
@@ -83,11 +112,13 @@ const useJobApplications = (initialData?: JobApplication[]) => {
   return {
     query: list,
     sorted: sortedApplications,
+    invalidating,
     remove,
     create,
     count,
     updateStatus,
     stats,
+    isInvalidated: invalidating,
   };
 };
 

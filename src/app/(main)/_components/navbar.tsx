@@ -38,6 +38,7 @@ const NextLink: FC<PropsWithChildren<{ path: string; className?: string }>> = ({
 const routes = [
   { name: "Dashboard", path: "/" },
   { name: "Styleguide", path: "/styleguide" },
+  { name: "Widget", path: "/widgets/application-stats" },
 ];
 
 const Navbar: React.FC = () => {
