@@ -15,14 +15,14 @@
   --color-card-foreground: hsl(0 0% 100%);
   --color-popover: var(--color-light);
   --color-popover-foreground: hsl(0 0% 100%);
-  --color-primary: hsl(345, 100%, 57%);
+  --color-primary: hsl(165, 100%, 40%);
   --color-primary-foreground: var(--color-foreground);
   --color-muted: #7f7f7f;
   --color-muted-foreground: var(--color-background-lightest);
-  --color-secondary: hsl(165, 100%, 40%);
+  --color-secondary: hsl(200, 100%, 50%);
   --color-secondary-foreground: hsl(0 0% 100%);
   --color-tertiary: hsl(45, 100%, 50%);
-  --color-destructive: hsl(0 97% 33%);
+  --color-destructive: hsl(345, 100%, 57%);
   --color-destructive-foreground: var(--color-foreground);
   --color-warning: hsl(30 100% 60%);
   --color-warning-foreground: var(--color-foreground);

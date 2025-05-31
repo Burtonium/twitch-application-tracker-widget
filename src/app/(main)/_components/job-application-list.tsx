@@ -88,11 +88,11 @@ const JobApplicationList: React.FC<JobApplicationListProps> = ({
           >
             <h3>
               <a href={application.url} target="_blank" rel="noreferrer">
-                <span className="text-secondary text-xl font-bold">
+                <span className="text-tertiary text-xl font-bold">
                   {application.title}
                 </span>{" "}
                 at{" "}
-                <span className="text-tertiary text-xl font-bold">
+                <span className="text-secondary text-xl font-bold">
                   {application.company}
                 </span>
                 {application.derivedStatus && (

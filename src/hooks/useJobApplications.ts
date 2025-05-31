@@ -26,10 +26,12 @@ const useJobApplications = ({
   );
 
   const invalidateList = useMemo(() => {
-    const debounced = debounce(() => {
-      return utils.jobApplications.list
-        .invalidate()
-        .finally(() => setInvalidating(false));
+    const debounced = debounce(async () => {
+      try {
+        return await utils.jobApplications.list.invalidate();
+      } finally {
+        return setInvalidating(false);
+      }
     }, 1000);
 
     return () => {
