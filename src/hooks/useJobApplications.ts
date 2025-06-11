@@ -26,17 +26,17 @@ const useJobApplications = ({
   );
 
   const invalidateList = useMemo(() => {
-    const debounced = debounce(async () => {
+    const debounced = debounce(() => {
       try {
-        return await utils.jobApplications.list.invalidate();
+        return utils.jobApplications.list.invalidate();
       } finally {
-        return setInvalidating(false);
+        setInvalidating(false);
       }
     }, 1000);
 
     return () => {
       setInvalidating(true);
-      debounced();
+      return debounced();
     };
   }, [utils]);
 
@@ -50,8 +50,8 @@ const useJobApplications = ({
           app.url.toLowerCase().includes(search.toLowerCase()),
       );
     });
-    invalidateList();
-  }, [search]);
+    void invalidateList();
+  }, [search, invalidateList, utils.jobApplications.list]);
 
   const remove = api.jobApplications.delete.useMutation({
     onMutate: (vars) => {

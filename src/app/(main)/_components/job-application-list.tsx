@@ -9,7 +9,6 @@ import {
   SelectItem,
   SelectValue,
   cn,
-  Button,
   Input,
 } from "@/lib/ui";
 import dayjs from "@/dayjs";
@@ -119,12 +118,12 @@ const JobApplicationList: React.FC<JobApplicationListProps> = ({
               Status:{" "}
               <Select
                 value={application.status}
-                onValueChange={(status) => {
+                onValueChange={(status) =>
                   updateStatus.mutateAsync({
                     id: application.id,
                     status: status as JobApplicationStatus,
-                  });
-                }}
+                  })
+                }
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select a status" />

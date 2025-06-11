@@ -16,11 +16,10 @@ import {
 } from "@/lib/ui";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { type z } from "zod";
 import { createJobApplicationSchema } from "@/validators/jobApplication";
-import { api } from "@/trpc/react";
 import useJobApplications from "@/hooks/useJobApplications";
-import { CalendarIcon, X } from "lucide-react";
+import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/lib/ui/calendar";
 import dayjs from "@/dayjs";
 

@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { QueryClientProvider, type QueryClient } from "@tanstack/react-query";
 import {
   httpBatchStreamLink,

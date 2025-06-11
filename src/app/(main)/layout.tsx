@@ -1,5 +1,6 @@
 import "@/styles/globals.css";
 
+import React from "react";
 import Navbar from "./_components/navbar";
 
 export default function NavbarLayout({

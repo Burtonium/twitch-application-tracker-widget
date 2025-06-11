@@ -4,6 +4,7 @@ export interface AppEvents {
   StatsUpdated: [stats: { count: number; status: string }[]];
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type EventMap<T> = Record<keyof T, any[]>;
 
 export default class IterableEventEmitter<
@@ -13,7 +14,8 @@ export default class IterableEventEmitter<
     eventName: TEventName,
     opts?: NonNullable<Parameters<typeof on>[2]>,
   ): AsyncIterable<T[TEventName]> {
-    return on(this as any, eventName, opts) as any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument
+    return on(this as any, eventName, opts) as AsyncIterable<T[TEventName]>;
   }
 }
 

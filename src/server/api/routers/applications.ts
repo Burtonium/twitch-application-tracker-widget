@@ -2,11 +2,11 @@ import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import { createJobApplicationSchema } from "@/validators/jobApplication";
-import { JobApplicationStatus, PrismaClient } from "@prisma/client";
+import { JobApplicationStatus, type PrismaClient } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import dayjs from "@/dayjs";
 import { DAY_THRESHOLD } from "@/consts";
-import IterableEventEmitter, { on } from "@/utils/event-emitter";
+import IterableEventEmitter from "@/utils/event-emitter";
 
 const eventEmitter = new IterableEventEmitter();
 

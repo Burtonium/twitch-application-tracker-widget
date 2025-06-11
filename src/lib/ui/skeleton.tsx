@@ -1,5 +1,6 @@
 import { cn } from "@/utils/cn";
 import { cva } from "class-variance-authority";
+import React from "react";
 
 const skeletonVariants = cva("rounded-2xl animate-pulse", {
   variants: {

@@ -1,5 +1,6 @@
 import "@/styles/globals.css";
 
+import React from "react";
 import { TRPCReactProvider } from "@/trpc/react";
 
 import { type Metadata } from "next";

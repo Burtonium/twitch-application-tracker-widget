@@ -1,5 +1,5 @@
 import type { JobApplication } from "@prisma/client";
-import { z, ZodType } from "zod";
+import { z, type ZodType } from "zod";
 
 export const createJobApplicationSchema = z.object({
   status: z
