@@ -1,45 +1,12 @@
 "use client";
 
-import React, {
-  type FC,
-  type PropsWithChildren,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { Burger } from "@/lib/ui/burger";
 import { cn } from "@/utils/cn";
 import { usePathname } from "next/navigation";
 import useClickOutside from "@/hooks/useClickOutside";
-
-const NextLink: FC<PropsWithChildren<{ path: string; className?: string }>> = ({
-  className,
-  path,
-  children,
-}) => {
-  const pathname = usePathname();
-
-  return (
-    <Link
-      prefetch
-      href={path}
-      className={cn(
-        "cursor-pointer py-2 text-xl font-normal",
-        pathname === path && "text-primary",
-        className,
-      )}
-    >
-      {children}
-    </Link>
-  );
-};
-
-const routes = [
-  { name: "Dashboard", path: "/" },
-  { name: "Styleguide", path: "/styleguide" },
-  { name: "Widget", path: "/widgets/application-stats" },
-];
+import { ExternalLink } from "lucide-react";
 
 const Navbar: React.FC = () => {
   const pathname = usePathname();
@@ -51,11 +18,25 @@ const Navbar: React.FC = () => {
     setNavOpen(false);
   }, [pathname]);
 
+  const linkProps = useMemo(
+    () =>
+      ({ path, className }: { path: string; className?: string }) => ({
+        prefetch: true,
+        href: path,
+        className: cn(
+          "hover:text-primary hover:drop-shadow-primary leading-none lg:text-sm cursor-pointer py-2 text-xl font-normal text-nowrap",
+          pathname === path ? "text-primary" : "",
+          className,
+        ),
+      }),
+    [pathname],
+  );
+
   return (
     <nav className={cn("fixed z-50 flex w-full items-center")} ref={navRef}>
       <div
         className={cn(
-          "bg-background/25 lg:absoluted fixed top-0 right-0 size-full backdrop-blur-lg transition-all duration-500",
+          "bg-background/25 lg:absoluted fixed top-0 right-0 size-full text-nowrap backdrop-blur-lg transition-all duration-500",
           {
             "h-20 md:h-24": !isNavOpen,
             "h-full lg:h-24": isNavOpen,
@@ -94,16 +75,20 @@ const Navbar: React.FC = () => {
         )}
       >
         <ul className="space-y-3 text-right lg:flex lg:items-center lg:gap-5 lg:space-y-0">
-          {routes.map((route) => (
-            <li key={route.path}>
-              <NextLink
-                className="hover:text-primary hover:drop-shadow-primary leading-none lg:text-sm"
-                path={route.path}
-              >
-                <span>{route.name}</span>
-              </NextLink>
-            </li>
-          ))}
+          <li>
+            <Link {...linkProps({ path: "/" })}>Dashboard</Link>
+          </li>
+          <li>
+            <Link {...linkProps({ path: "/styleguide" })}>Styleguide</Link>
+          </li>
+          <li>
+            <Link
+              {...linkProps({ path: "/widgets/application-stats" })}
+              target="_blank"
+            >
+              Widget <ExternalLink className="mb-0.5 inline size-4" />
+            </Link>
+          </li>
         </ul>
       </div>
     </nav>

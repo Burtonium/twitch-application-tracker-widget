@@ -66,12 +66,23 @@ const JobApplicationList: React.FC<JobApplicationListProps> = ({
         </h2>
         <Input
           placeholder="Search..."
-          endAdornment={<SearchIcon className="text-primary h-4 w-4" />}
+          endAdornment={
+            search.length > 0 ? (
+              <button
+                className="text-destructive cursor-pointer"
+                onClick={() => setSearch("")}
+              >
+                <X />
+              </button>
+            ) : (
+              <SearchIcon className="text-primary h-4 w-4" />
+            )
+          }
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
       </div>
-      <ul className="grid grid-cols-1 items-center gap-2 sm:grid-cols-2 lg:grid-cols-3">
+      <ul className="flex flex-col gap-3">
         {derived?.map((application) => (
           <li
             key={application.id}
@@ -81,9 +92,9 @@ const JobApplicationList: React.FC<JobApplicationListProps> = ({
                   application.status === "Rejected" ||
                   application.derivedStatus === "No answer",
                 "border-tertiary": application.status === "Interviewing",
-                "border-secondary": application.status === "Success",
+                "border-primary": application.status === "Success",
               },
-              "relative col-span-1 grid grid-cols-subgrid items-center gap-3 rounded-md border px-3 py-2 pr-12 md:col-span-2 lg:col-span-3",
+              "relative col-span-1 flex flex-col gap-2 rounded-md border px-3 py-2 pr-12 md:col-span-2 lg:col-span-3",
             )}
           >
             <h3>

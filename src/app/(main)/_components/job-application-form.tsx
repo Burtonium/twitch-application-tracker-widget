@@ -118,14 +118,14 @@ export const CreateJobApplication = () => {
           name="createdAt"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Created At</FormLabel>
+              <FormLabel className="block">Created At</FormLabel>
               <FormControl>
                 <Popover>
                   <PopoverTrigger className="relative" asChild>
                     <Button
                       variant={"outline"}
                       className={cn(
-                        "relative w-[280px] justify-start text-left font-normal",
+                        "relative justify-start text-left font-normal sm:min-w-[160px] lg:min-w-[280px]",
                         !field.value && "text-muted-foreground",
                       )}
                     >

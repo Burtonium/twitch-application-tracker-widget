@@ -1,6 +1,6 @@
 # Twitch Job Applications Counter Widget
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app` that creates a simple counter widget for your Twitch stream.
+This is a personal project bootstrapped with `create-t3-app` that tracks the number of job applications on Twitch.
 
 ## Tech Stack
 
