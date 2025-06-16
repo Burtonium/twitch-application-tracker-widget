@@ -23,6 +23,8 @@ const buttonVariants = cva(
         ghost:
           "bg-transparent text-primary hover:bg-primary hover:text-primary-foreground hover:drop-shadow-primary",
         unset: "",
+        destructive:
+          "bg-destructive hover:bg-destructive/75 text-destructive-foreground border border-destructive",
       },
       size: {
         default: "h-9 p-3",

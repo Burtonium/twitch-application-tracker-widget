@@ -16,3 +16,18 @@ export const createJobApplicationSchema = z.object({
     ),
   createdAt: z.date().optional(),
 }) satisfies ZodType<Partial<JobApplication>>;
+
+export const applicationStats = z
+  .array(
+    z.object({
+      derived_status: z.string(),
+      count: z.bigint().transform((count) => Number(count)),
+    }),
+  )
+  .transform((stats) => ({
+    total: stats.reduce((acc, stat) => acc + stat.count, 0),
+    stats: stats.map((stat) => ({
+      count: stat.count,
+      status: stat.derived_status,
+    })),
+  }));

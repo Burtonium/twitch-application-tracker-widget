@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import { JobApplicationStatus, type JobApplication } from "@prisma/client";
 import {
   Select,
@@ -10,29 +10,20 @@ import {
   SelectValue,
   cn,
   Input,
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+  Button,
 } from "@/lib/ui";
 import dayjs from "@/dayjs";
 import { ExternalLink, Loader2, SearchIcon, X } from "lucide-react";
 import useJobApplications from "@/hooks/useJobApplications";
 import { DAY_THRESHOLD } from "@/consts";
+import JobApplicationView from "./job-application-view";
 
 interface JobApplicationListProps {
   initialData: JobApplication[];
 }
-
-const deriveJobApplication = (jobApp: JobApplication) => {
-  const derivedStatus =
-    jobApp.status === "Pending" &&
-    dayjs.duration(dayjs().diff(dayjs(jobApp.createdAt))).asDays() >=
-      DAY_THRESHOLD
-      ? "No answer"
-      : "";
-
-  return {
-    ...jobApp,
-    derivedStatus,
-  };
-};
 
 const JobApplicationList: React.FC<JobApplicationListProps> = ({
   initialData,
@@ -44,18 +35,16 @@ const JobApplicationList: React.FC<JobApplicationListProps> = ({
     remove,
     updateStatus,
     invalidating,
+    stats,
   } = useJobApplications({ initialData, search });
-
-  const derived = useMemo(
-    () => applications?.map(deriveJobApplication),
-    [applications],
-  );
 
   return (
     <div>
       <div className="flex justify-between">
         <h2 className="decoration-tertiary mb-5 text-2xl underline underline-offset-4">
-          <span>Job Applications ({applications.length})</span>
+          <span>
+            Job Applications ({applications.length}/{stats.data?.total})
+          </span>
           {query.isLoading ||
             (invalidating && (
               <span>
@@ -82,67 +71,18 @@ const JobApplicationList: React.FC<JobApplicationListProps> = ({
         />
       </div>
       <ul className="flex flex-col gap-3">
-        {derived?.map((application) => (
-          <li
-            key={application.id}
-            className={cn(
-              {
-                "border-destructive":
-                  application.status === "Rejected" ||
-                  application.derivedStatus === "No answer",
-                "border-tertiary": application.status === "Interviewing",
-                "border-primary": application.status === "Success",
-              },
-              "relative col-span-1 flex flex-col gap-2 rounded-md border px-3 py-2 pr-12 md:col-span-2 lg:col-span-3",
-            )}
-          >
-            <h3>
-              <a href={application.url} target="_blank" rel="noreferrer">
-                <span className="text-tertiary text-xl font-bold">
-                  {application.title}
-                </span>{" "}
-                at{" "}
-                <span className="text-secondary text-xl font-bold">
-                  {application.company}
-                </span>
-                {application.derivedStatus && (
-                  <span className="text-destructive text-lg font-bold uppercase empty:hidden">
-                    &nbsp;**{application.derivedStatus}**
-                  </span>
-                )}
-                <ExternalLink className="text-primary mb-2 ml-2 inline text-sm" />
-              </a>
-            </h3>
-            <p>Last Modified: {dayjs(application.updatedAt).fromNow()}</p>
-            <p className="flex items-center gap-3">
-              Status:{" "}
-              <Select
-                value={application.status}
-                onValueChange={(status) =>
-                  updateStatus.mutateAsync({
-                    id: application.id,
-                    status: status as JobApplicationStatus,
-                  })
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a status" />
-                </SelectTrigger>
-                <SelectContent align="end">
-                  {Object.keys(JobApplicationStatus).map((status) => (
-                    <SelectItem key={status} value={status}>
-                      {status}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </p>
-            <button
-              onClick={() => remove.mutateAsync({ id: application.id })}
-              className="text-destructive absolute top-3 right-2 cursor-pointer"
-            >
-              <X />
-            </button>
+        {applications?.map((application) => (
+          <li key={application.id}>
+            <JobApplicationView
+              data={application}
+              onDelete={() => remove.mutateAsync({ id: application.id })}
+              onUpdate={(status) =>
+                updateStatus.mutateAsync({
+                  id: application.id,
+                  status,
+                })
+              }
+            />
           </li>
         ))}
       </ul>

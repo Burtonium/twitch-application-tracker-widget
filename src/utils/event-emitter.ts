@@ -1,7 +1,9 @@
+import type { applicationStats } from "@/validators/jobApplication";
 import EventEmitter, { on } from "node:events";
+import type { z } from "zod";
 
 export interface AppEvents {
-  StatsUpdated: [stats: { count: number; status: string }[]];
+  StatsUpdated: [stats: z.infer<typeof applicationStats>];
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

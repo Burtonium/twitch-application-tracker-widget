@@ -20,7 +20,7 @@ const colors = {
   "No answer": "#FF0000",
 };
 
-export default function ApplicationStats() {
+export default function JobApplicationStats() {
   const { stats } = useJobApplications();
 
   const sorted = useMemo(
@@ -41,16 +41,18 @@ export default function ApplicationStats() {
   );
 
   return (
-    <div className="flex w-full flex-col items-end gap-2 p-8">
-      {sorted?.map((stat) => (
-        <h2
-          className="text-5xl font-bold drop-shadow-[0_2px_2px_rgba(0,0,0,1)]"
-          style={{ color: colors[stat.status as keyof typeof colors] }}
-          key={stat.status}
-        >
-          {stat.status}: {stat.count}
-        </h2>
-      ))}
+    <div>
+      <div className="flex flex-wrap gap-3 pb-5">
+        <strong>Total Applications {stats.data?.total}</strong>
+        {sorted?.map((stat) => (
+          <h2
+            style={{ color: colors[stat.status as keyof typeof colors] }}
+            key={stat.status}
+          >
+            {stat.status}: {stat.count}
+          </h2>
+        ))}
+      </div>
     </div>
   );
 }

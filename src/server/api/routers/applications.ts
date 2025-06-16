@@ -7,22 +7,9 @@ import { TRPCError } from "@trpc/server";
 import dayjs from "@/dayjs";
 import { DAY_THRESHOLD } from "@/consts";
 import IterableEventEmitter from "@/utils/event-emitter";
+import { applicationStats } from "@/validators/jobApplication";
 
 const eventEmitter = new IterableEventEmitter();
-
-const applicationStats = z
-  .array(
-    z.object({
-      derived_status: z.string(),
-      count: z.bigint().transform((count) => Number(count)),
-    }),
-  )
-  .transform((stats) =>
-    stats.map((stat) => ({
-      count: stat.count,
-      status: stat.derived_status,
-    })),
-  );
 
 const fetchStats = async (db: PrismaClient) => {
   const thresholdDate = dayjs().subtract(DAY_THRESHOLD, "days").toISOString();
@@ -31,7 +18,7 @@ const fetchStats = async (db: PrismaClient) => {
     `
         SELECT
           CASE
-            WHEN ja.status = 'Pending'
+            WHEN ja.status = '${JobApplicationStatus.Pending}'
               AND "createdAt" <= '${thresholdDate}'::timestamptz
             THEN 'No answer'
             ELSE ja.status::text   
