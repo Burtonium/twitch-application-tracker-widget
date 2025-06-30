@@ -2,7 +2,7 @@
 
 import useClipboard from "@/hooks/useClipboard";
 import { Popover, PopoverContent, PopoverTrigger } from "@/lib/ui";
-import { Link } from "lucide-react";
+import { ExternalLink, Link, MailIcon, PhoneIcon } from "lucide-react";
 
 const LinkButton = ({
   children,
@@ -30,9 +30,12 @@ const LinkButton = ({
 };
 
 const links = {
+  name: "Mathieu Bertin",
   linkedin: "https://linkedin.com/in/mathieu-bertin",
   github: "https://github.com/burtonium",
   portfolio: "https://portfolio.nephelo.io",
+  email: "matt@burtonize.me",
+  phone: "+66950496940",
 };
 
 export default function QuickLinks() {
@@ -40,6 +43,10 @@ export default function QuickLinks() {
     <div>
       <h2 className="mb-3">Quick Links</h2>
       <div className="flex gap-3 pb-5">
+        <LinkButton href={links.name}>
+          <span className="text-tertiary">Full Name</span>
+          <ExternalLink className="mb-2 ml-2 inline text-sm" />
+        </LinkButton>
         <LinkButton href={links.portfolio}>
           <img
             className="size-6 rounded-xl"
@@ -57,6 +64,12 @@ export default function QuickLinks() {
             className="size-6"
             src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg"
           />
+        </LinkButton>
+        <LinkButton href={links.email}>
+          <MailIcon />
+        </LinkButton>
+        <LinkButton href={links.phone}>
+          <PhoneIcon />
         </LinkButton>
       </div>
     </div>
